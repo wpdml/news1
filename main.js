@@ -35,13 +35,11 @@ const displayNews = () => {
     `).join('');
 };
 
-// Function to handle category buttons click
 const handleCategoryClick = (category) => {
-    closeNav(); // Close sidebar if open
-    getNews(category); // Fetch news for the selected category
+    closeNav();
+    getNews(category); 
 };
 
-// Open and close sidebar functions
 const openNav = () => {
     document.getElementById('mySidenav').style.width = '250px';
 };
@@ -50,7 +48,6 @@ const closeNav = () => {
     document.getElementById('mySidenav').style.width = '0';
 };
 
-// Search functionality
 const toggleSearch = () => {
     const searchBar = document.getElementById('search-bar');
     searchBar.style.display = searchBar.style.display === 'none' ? 'block' : 'none';
@@ -63,7 +60,5 @@ const handleSearch = (event) => {
     }
 };
 
-// Initial load of news (you can load default category news here)
 getNews();
 
-// CSS styles (assuming you have them in your style.css)
