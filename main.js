@@ -48,6 +48,7 @@ const closeNav = () => {
     document.getElementById('mySidenav').style.width = '0';
 };
 
+
 const toggleSearch = () => {
     const searchBar = document.getElementById('search-bar');
     searchBar.style.display = searchBar.style.display === 'none' ? 'block' : 'none';
@@ -56,7 +57,22 @@ const toggleSearch = () => {
 const handleSearch = (event) => {
     if (event.key === 'Enter') {
         const query = event.target.value;
-        getNews(query);
+        getNewsByQuery(query);
+    }
+};
+
+const getNewsByQuery = async (query) => {
+    let url = `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?apiKey=${apiKey}&q=${query}&page=1&pageSize=10`;
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        const data = await response.json();
+        news = data.articles;
+        displayNews();
+    } catch (error) {
+        console.error('Fetch error: ', error);
     }
 };
 
