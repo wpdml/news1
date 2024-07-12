@@ -9,12 +9,17 @@ const getNews = async (category = '') => {
     try {
         const response = await fetch(url);
         if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
+            throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
         }
         const data = await response.json();
-        news = data.articles;
-        displayNews();
+        if (data.articles.length === 0) {
+            displayError('No matches for your search');
+        } else {
+            news = data.articles;
+            displayNews();
+        }
     } catch (error) {
+        displayError(`Fetch error: ${error.message}`);
         console.error('Fetch error: ', error);
     }
 };
@@ -35,6 +40,11 @@ const displayNews = () => {
     `).join('');
 };
 
+const displayError = (message) => {
+    const newsContainer = document.getElementById('news-container');
+    newsContainer.innerHTML = `<div class="col-md-12"><p class="error-message">${message}</p></div>`;
+};
+
 const handleCategoryClick = (category) => {
     closeNav();
     getNews(category); 
@@ -47,7 +57,6 @@ const openNav = () => {
 const closeNav = () => {
     document.getElementById('mySidenav').style.width = '0';
 };
-
 
 const toggleSearch = () => {
     const searchBar = document.getElementById('search-bar');
@@ -66,15 +75,19 @@ const getNewsByQuery = async (query) => {
     try {
         const response = await fetch(url);
         if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
+            throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
         }
         const data = await response.json();
-        news = data.articles;
-        displayNews();
+        if (data.articles.length === 0) {
+            displayError('No matches for your search');
+        } else {
+            news = data.articles;
+            displayNews();
+        }
     } catch (error) {
+        displayError(`Fetch error: ${error.message}`);
         console.error('Fetch error: ', error);
     }
 };
 
 getNews();
-
