@@ -1,9 +1,12 @@
 const apiKey = '4851e5992a434a07a5a77e1e205db424';
 let news = [];
+let url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?apiKey=${apiKey}`);
+let totalResults = 0;
+let page = 1;
+const pageSize = 10;
+const groupSize = 5;
 
-let url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?apiKey=${apiKey}`)
-
-const getLatestNews = async() => {
+const getLatestNews = async () => {
     try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -14,20 +17,29 @@ const getLatestNews = async() => {
             displayError('No matches for your search');
         } else {
             news = data.articles;
+            totalResults = data.totalResults;
             displayNews();
+            pagination();
         }
     } catch (error) {
         displayError(`Fetch error: ${error.message}`);
         console.error('Fetch error: ', error);
     }
-}
+};
 
 const getNews = async (category = '') => {
-    url = `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?apiKey=${apiKey}&page=1&pageSize=10`;
+    page = 1; // Reset to the first page whenever a new category is selected
+    url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?apiKey=${apiKey}&page=${page}&pageSize=${pageSize}`);
     if (category) {
-        url += `&category=${category}`;
+        url.searchParams.set('category', category);
     }
-    getLatestNews()
+    getLatestNews();
+};
+
+const getNewsByPage = (pageNumber) => {
+    page = pageNumber;
+    url.searchParams.set('page', page);
+    getLatestNews();
 };
 
 const displayNews = () => {
@@ -53,7 +65,7 @@ const displayError = (message) => {
 
 const handleCategoryClick = (category) => {
     closeNav();
-    getNews(category); 
+    getNews(category);
 };
 
 const openNav = () => {
@@ -77,8 +89,38 @@ const handleSearch = (event) => {
 };
 
 const getNewsByQuery = async (query) => {
-    url = `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?apiKey=${apiKey}&q=${query}&page=1&pageSize=10`;
-    getLatestNews()
+    page = 1;
+    url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?apiKey=${apiKey}&q=${query}&page=${page}&pageSize=${pageSize}`);
+    getLatestNews();
+};
+
+const pagination = () => {
+    const totalPages = Math.ceil(totalResults / pageSize);
+    const pageGroup = Math.ceil(page / groupSize);
+    const lastPage = Math.min(totalPages, pageGroup * groupSize);
+    const firstPage = Math.max(1, lastPage - (groupSize - 1));
+
+    let paginationHTML = `
+        <li class="page-item ${page === 1 ? 'disabled' : ''}">
+            <a class="page-link" href="#" onclick="getNewsByPage(${page - 1})">Previous</a>
+        </li>
+    `;
+
+    for (let i = firstPage; i <= lastPage; i++) {
+        paginationHTML += `
+            <li class="page-item ${i === page ? 'active' : ''}">
+                <a class="page-link" href="#" onclick="getNewsByPage(${i})">${i}</a>
+            </li>
+        `;
+    }
+
+    paginationHTML += `
+        <li class="page-item ${page === totalPages ? 'disabled' : ''}">
+            <a class="page-link" href="#" onclick="getNewsByPage(${page + 1})">Next</a>
+        </li>
+    `;
+
+    document.querySelector('.pagination').innerHTML = paginationHTML;
 };
 
 getNews();
