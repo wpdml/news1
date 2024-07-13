@@ -102,7 +102,7 @@ const pagination = () => {
 
     let paginationHTML = `
         <li class="page-item ${page === 1 ? 'disabled' : ''}">
-            <a class="page-link" href="#" onclick="getNewsByPage(${page - 1})">Previous</a>
+            <a class="page-link" href="#" onclick="getNewsByPage(${page - 1})">◀</a>
         </li>
     `;
 
@@ -116,7 +116,7 @@ const pagination = () => {
 
     paginationHTML += `
         <li class="page-item ${page === totalPages ? 'disabled' : ''}">
-            <a class="page-link" href="#" onclick="getNewsByPage(${page + 1})">Next</a>
+            <a class="page-link" href="#" onclick="getNewsByPage(${page + 1})">▶</a>
         </li>
     `;
 
