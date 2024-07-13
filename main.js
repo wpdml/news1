@@ -1,11 +1,9 @@
 const apiKey = '4851e5992a434a07a5a77e1e205db424';
 let news = [];
 
-const getNews = async (category = '') => {
-    let url = `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?apiKey=${apiKey}&page=1&pageSize=10`;
-    if (category) {
-        url += `&category=${category}`;
-    }
+let url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?apiKey=${apiKey}`)
+
+const getLatestNews = async() => {
     try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -22,6 +20,14 @@ const getNews = async (category = '') => {
         displayError(`Fetch error: ${error.message}`);
         console.error('Fetch error: ', error);
     }
+}
+
+const getNews = async (category = '') => {
+    url = `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?apiKey=${apiKey}&page=1&pageSize=10`;
+    if (category) {
+        url += `&category=${category}`;
+    }
+    getLatestNews()
 };
 
 const displayNews = () => {
@@ -71,23 +77,8 @@ const handleSearch = (event) => {
 };
 
 const getNewsByQuery = async (query) => {
-    let url = `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?apiKey=${apiKey}&q=${query}&page=1&pageSize=10`;
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
-        }
-        const data = await response.json();
-        if (data.articles.length === 0) {
-            displayError('No matches for your search');
-        } else {
-            news = data.articles;
-            displayNews();
-        }
-    } catch (error) {
-        displayError(`Fetch error: ${error.message}`);
-        console.error('Fetch error: ', error);
-    }
+    url = `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?apiKey=${apiKey}&q=${query}&page=1&pageSize=10`;
+    getLatestNews()
 };
 
 getNews();
