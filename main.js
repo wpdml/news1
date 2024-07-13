@@ -101,6 +101,17 @@ const pagination = () => {
     const firstPage = Math.max(1, lastPage - (groupSize - 1));
 
     let paginationHTML = `
+    <li class="page-item gap-left ${page === 1 ? 'disabled' : ''}">
+        <a class="page-link" href="#" onclick="getNewsByPage(1)">◼</a>
+    </li>
+`;
+
+    paginationHTML += `
+        <li class="page-item ${page === 1 ? 'disabled' : ''}">
+            <a class="page-link" href="#" onclick="getNewsByPage(${firstPage})"><<</a>
+        </li>
+    `;
+    paginationHTML += `
         <li class="page-item ${page === 1 ? 'disabled' : ''}">
             <a class="page-link" href="#" onclick="getNewsByPage(${page - 1})">◀</a>
         </li>
@@ -117,6 +128,18 @@ const pagination = () => {
     paginationHTML += `
         <li class="page-item ${page === totalPages ? 'disabled' : ''}">
             <a class="page-link" href="#" onclick="getNewsByPage(${page + 1})">▶</a>
+        </li>
+    `;
+    
+    paginationHTML += `
+        <li class="page-item ${page === totalPages ? 'disabled' : ''}">
+            <a class="page-link" href="#" onclick="getNewsByPage(${lastPage})">>></a>
+        </li>
+    `;
+        
+    paginationHTML += `
+        <li class="page-item gap-right ${page === totalPages ? 'disabled' : ''}">
+            <a class="page-link" href="#" onclick="getNewsByPage(${totalPages})">⏭</a>
         </li>
     `;
 
