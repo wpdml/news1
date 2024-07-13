@@ -28,7 +28,7 @@ const getLatestNews = async () => {
 };
 
 const getNews = async (category = '') => {
-    page = 1; // Reset to the first page whenever a new category is selected
+    page = 1;
     url = new URL(`https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?apiKey=${apiKey}&page=${page}&pageSize=${pageSize}`);
     if (category) {
         url.searchParams.set('category', category);
